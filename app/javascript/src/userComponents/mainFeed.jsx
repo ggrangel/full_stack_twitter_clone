@@ -2,13 +2,30 @@
 import React from 'react';
 import TweetForm from '@src/userComponents/tweetForm';
 import Tweets from '@src/userComponents/tweets';
+import { handleErrors } from '@utils/fetchHelper';
 
 class MainFeed extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       username: this.props.username,
+      tweets: []
     }
+  }
+
+  componentDidMount() {
+    this.getAllTweets()
+  }
+
+  getAllTweets = () => {
+    fetch('/api/tweets')
+      .then(handleErrors)
+      .then(data => {
+        console.log('data', data)
+        this.setState({ 
+          tweets: data.tweets,
+        })
+      })
   }
 
   render () {
@@ -20,10 +37,15 @@ class MainFeed extends React.Component {
           <h5 className="mb-0"><b>Home</b></h5>
         </div>
         <div className="col">
-          <TweetForm />
+          <TweetForm 
+            getAllTweets={this.getAllTweets}
+          />
         </div>
         <div className="col">
-          <Tweets username={username} />
+          <Tweets
+            username={username}
+            tweets={this.state.tweets}
+          />
         </div>
       </div>
     )

@@ -9,19 +9,7 @@ class TweetForm extends React.Component {
       msg: '',
       selectedFile: null,
       error: '',
-      tweets: [],
     }
-  }
-
-  getAllTweets() {
-    fetch('/api/tweets')
-      .then(handleErrors)
-      .then(data => {
-        console.log('data', data)
-        this.setState({ 
-          tweets: data.tweets,
-        })
-      })
   }
 
   handleChange = (e) => {
@@ -57,7 +45,7 @@ class TweetForm extends React.Component {
         tweetForm.value = ''
         const tweetFormFile = document.querySelector('input#file-select')
         tweetFormFile.value = ''
-        this.getAllTweets()
+        this.props.getAllTweets()
         this.setState({ 
           msg: '',
           selectedFile: null

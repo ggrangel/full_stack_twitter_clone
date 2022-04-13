@@ -10,25 +10,13 @@ class Tweets extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      tweets: [],
-      username: this.props.username,
     }
   }
 
   componentDidMount() {
-    this.getAllTweets()
+
   }
 
-  getAllTweets() {
-    fetch('/api/tweets')
-      .then(handleErrors)
-      .then(data => {
-        console.log('data', data)
-        this.setState({ 
-          tweets: data.tweets,
-        })
-      })
-  }
 
   deleteTweet = (e) => {
     e.preventDefault();
@@ -55,7 +43,7 @@ class Tweets extends React.Component {
   }
 
   render () {
-    const { tweets, username } = this.state;
+    const { tweets, username } = this.props;
 
     return (
       <div className="tweets pt-3">
