@@ -1,1 +1,2 @@
-import '@src/home';
+import '@src/home'
+import '@src/App'
