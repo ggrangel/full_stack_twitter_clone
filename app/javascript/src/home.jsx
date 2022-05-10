@@ -65,7 +65,7 @@ function App () {
                         id='su-email'
                         variant='standard'
                         placeholder='email'
-                        required='true'
+                        required={true}
                         InputProps={{
                           style: {
                             color: 'white'
@@ -88,6 +88,7 @@ function App () {
                     <Grid item>
                       <TextField
                         id='su-password'
+                        type='password'
                         variant='standard'
                         placeholder='password'
                         InputProps={{
@@ -98,7 +99,11 @@ function App () {
                       ></TextField>
                     </Grid>
                     <Grid item align='center' mb={3}>
-                      <Button variant='contained' color='primary'>
+                      <Button
+                        variant='contained'
+                        color='primary'
+                        id='sign-up-btn'
+                      >
                         Sign up
                       </Button>
                     </Grid>
@@ -121,7 +126,7 @@ function App () {
                   </Grid>
                   <Grid item>
                     <TextField
-                      id='su-username'
+                      id='si-username'
                       variant='standard'
                       placeholder='username'
                       InputProps={{
@@ -133,8 +138,9 @@ function App () {
                   </Grid>
                   <Grid item>
                     <TextField
-                      id='su-password'
+                      id='si-password'
                       variant='standard'
+                      type='password'
                       placeholder='password'
                       InputProps={{
                         style: {
@@ -162,7 +168,6 @@ export default App
 ReactDOM.render(
   <React.StrictMode>
     <App />
-    {/* <h1>Teste</h1> */}
   </React.StrictMode>,
-  document.body
+  document.getElementById('root')
 )
