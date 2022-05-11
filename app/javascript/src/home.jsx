@@ -1,5 +1,7 @@
 import React from 'react'
+import { useState } from 'react'
 import ReactDOM from 'react-dom'
+import axios from 'axios'
 import login_img from '../../assets/images/login.png'
 import {
   Grid,
@@ -20,6 +22,143 @@ const styles = {
       color: 'italic'
     }
   }
+}
+
+function SignUp () {
+  const [email, setEmail] = useState()
+  const [username, setUsername] = useState()
+  const [password, setPassword] = useState()
+
+  async function signUserUp () {
+    await axios.post('/api/users', {
+      user: {
+        email: email,
+        username: username,
+        password: password
+      }
+    })
+  }
+
+  return (
+    <Paper sx={{ width: '300px', backgroundColor: '#242626 ' }}>
+      <FormControl>
+        <Grid
+          container
+          flexDirection='column'
+          rowSpacing={2}
+          alignContent='center'
+        >
+          <Grid item>
+            <Typography variant='h6' color='white'>
+              Create your account
+            </Typography>
+          </Grid>
+          <Grid item>
+            <TextField
+              id='su-email'
+              variant='standard'
+              placeholder='email'
+              value={email}
+              required={true}
+              InputProps={{
+                style: {
+                  color: 'white'
+                }
+              }}
+            ></TextField>
+          </Grid>
+          <Grid item>
+            <TextField
+              id='su-username'
+              variant='standard'
+              placeholder='username'
+              value={username}
+              InputProps={{
+                style: {
+                  color: 'white'
+                }
+              }}
+            ></TextField>
+          </Grid>
+          <Grid item>
+            <TextField
+              id='su-password'
+              type='password'
+              variant='standard'
+              placeholder='password'
+              value={password}
+              InputProps={{
+                style: {
+                  color: 'white'
+                }
+              }}
+            ></TextField>
+          </Grid>
+          <Grid item align='center' mb={3}>
+            <Button
+              variant='contained'
+              color='primary'
+              id='sign-up-btn'
+              onClick={signUserUp}
+            >
+              Sign up
+            </Button>
+          </Grid>
+        </Grid>
+      </FormControl>
+    </Paper>
+  )
+}
+
+function SignIn () {
+  return (
+    <>
+      <Paper sx={{ width: '300px', backgroundColor: '#242626 ' }}>
+        <Grid
+          container
+          flexDirection='column'
+          rowSpacing={2}
+          alignContent='center'
+        >
+          <Grid item>
+            <Typography variant='h6' color='white'>
+              Already have an account?
+            </Typography>
+          </Grid>
+          <Grid item>
+            <TextField
+              id='si-username'
+              variant='standard'
+              placeholder='username'
+              InputProps={{
+                style: {
+                  color: 'white'
+                }
+              }}
+            ></TextField>
+          </Grid>
+          <Grid item>
+            <TextField
+              id='si-password'
+              variant='standard'
+              type='password'
+              placeholder='password'
+              InputProps={{
+                style: {
+                  color: 'white'
+                }
+              }}
+            ></TextField>
+          </Grid>
+          <Grid item align='center' mb={3}>
+            <Button variant='contained' color='primary'>
+              LOG IN
+            </Button>
+          </Grid>
+        </Grid>
+      </Paper>
+    </>
+  )
 }
 
 function App () {
@@ -47,115 +186,10 @@ function App () {
               </Typography>
             </Grid>
             <Grid item align='center'>
-              <Paper sx={{ width: '300px', backgroundColor: '#242626 ' }}>
-                <FormControl>
-                  <Grid
-                    container
-                    flexDirection='column'
-                    rowSpacing={2}
-                    alignContent='center'
-                  >
-                    <Grid item>
-                      <Typography variant='h6' color='white'>
-                        Create your account
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <TextField
-                        id='su-email'
-                        variant='standard'
-                        placeholder='email'
-                        required={true}
-                        InputProps={{
-                          style: {
-                            color: 'white'
-                          }
-                        }}
-                      ></TextField>
-                    </Grid>
-                    <Grid item>
-                      <TextField
-                        id='su-username'
-                        variant='standard'
-                        placeholder='username'
-                        InputProps={{
-                          style: {
-                            color: 'white'
-                          }
-                        }}
-                      ></TextField>
-                    </Grid>
-                    <Grid item>
-                      <TextField
-                        id='su-password'
-                        type='password'
-                        variant='standard'
-                        placeholder='password'
-                        InputProps={{
-                          style: {
-                            color: 'white'
-                          }
-                        }}
-                      ></TextField>
-                    </Grid>
-                    <Grid item align='center' mb={3}>
-                      <Button
-                        variant='contained'
-                        color='primary'
-                        id='sign-up-btn'
-                      >
-                        Sign up
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </FormControl>
-              </Paper>
+              <SignUp />
             </Grid>
             <Grid item align='center'>
-              <Paper sx={{ width: '300px', backgroundColor: '#242626 ' }}>
-                <Grid
-                  container
-                  flexDirection='column'
-                  rowSpacing={2}
-                  alignContent='center'
-                >
-                  <Grid item>
-                    <Typography variant='h6' color='white'>
-                      Already have an account?
-                    </Typography>
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                      id='si-username'
-                      variant='standard'
-                      placeholder='username'
-                      InputProps={{
-                        style: {
-                          color: 'white'
-                        }
-                      }}
-                    ></TextField>
-                  </Grid>
-                  <Grid item>
-                    <TextField
-                      id='si-password'
-                      variant='standard'
-                      type='password'
-                      placeholder='password'
-                      InputProps={{
-                        style: {
-                          color: 'white'
-                        }
-                      }}
-                    ></TextField>
-                  </Grid>
-                  <Grid item align='center' mb={3}>
-                    <Button variant='contained' color='primary'>
-                      LOG IN
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Paper>
+              <SignIn />
             </Grid>
           </Grid>
         </Grid>
