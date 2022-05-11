@@ -13,15 +13,192 @@ import {
   FormControl
 } from '@mui/material'
 import TwitterIcon from '@mui/icons-material/Twitter'
+import $ from 'jquery'
 
 import './home.scss'
 
-const styles = {
-  input: {
-    '&::placeholder': {
-      color: 'italic'
-    }
+// axios.defaults.baseURL = 'http://0.0.0.0:3001/'
+axios.defaults.headers.common['X-CSRF-TOKEN'] = $(
+  'meta[name="csrf-token"]'
+).attr('content')
+
+function SignUp () {
+  const [email, setEmail] = useState('gustavorangel91@gmail.com')
+  const [username, setUsername] = useState('ggrangel')
+  const [password, setPassword] = useState('longpass123')
+
+  async function signUserUp () {
+    await axios
+      .post('api/users', {
+        user: {
+          email: email,
+          password: 'longpass123',
+          username: 'ggrangel'
+        }
+      })
+      .then(
+        response => {
+          console.log(response)
+        },
+        error => {
+          console.log(error)
+        }
+      )
   }
+
+  // async function signUserUp () {
+  //   axios({
+  //     method: 'post',
+  //     url: '/api/users',
+  //     data: {
+  //       user: {
+  //         email: 'dfsasfds',
+  //         username: 'fdsafs',
+  //         password: 'fdasfdjaklafdsjfddfas'
+  //       }
+  //     }
+  //   }).then(
+  //     response => {
+  //       console.log(response)
+  //     },
+  //     error => {
+  //       console.log(error)
+  //     }
+  //   )
+  // }
+
+  return (
+    <Paper sx={{ width: '300px', backgroundColor: '#242626 ' }}>
+      <FormControl>
+        <Grid
+          container
+          flexDirection='column'
+          rowSpacing={2}
+          alignContent='center'
+        >
+          <Grid item>
+            <Typography variant='h6' color='white'>
+              Create your account
+            </Typography>
+          </Grid>
+          <Grid item>
+            <TextField
+              id='su-email'
+              variant='standard'
+              placeholder='email'
+              value={email}
+              onChange={e => {
+                setEmail(e.target.value)
+              }}
+              required={true}
+              defaultValue='gustavorangel91@gmail.com'
+              InputProps={{
+                style: {
+                  color: 'white'
+                }
+              }}
+            ></TextField>
+          </Grid>
+          <Grid item>
+            <TextField
+              id='su-username'
+              variant='standard'
+              placeholder='username'
+              value={username}
+              defaultValue='ggrangel'
+              onChange={e => {
+                setUsername(e.target.value)
+              }}
+              InputProps={{
+                style: {
+                  color: 'white'
+                }
+              }}
+            ></TextField>
+          </Grid>
+          <Grid item>
+            <TextField
+              id='su-password'
+              type='password'
+              variant='standard'
+              placeholder='password'
+              defaultValue='Longpassword123'
+              value={password}
+              onChange={e => {
+                setPassword(e.target.value)
+              }}
+              InputProps={{
+                style: {
+                  color: 'white'
+                }
+              }}
+            ></TextField>
+          </Grid>
+          <Grid item align='center' mb={3}>
+            <Button
+              variant='contained'
+              color='primary'
+              id='sign-up-btn'
+              onClick={signUserUp}
+            >
+              Sign up
+            </Button>
+          </Grid>
+        </Grid>
+      </FormControl>
+    </Paper>
+  )
+}
+
+function SignIn () {
+  return (
+    <>
+      <Paper sx={{ width: '300px', backgroundColor: '#242626 ' }}>
+        <Grid
+          container
+          flexDirection='column'
+          rowSpacing={2}
+          alignContent='center'
+        >
+          <Grid item>
+            <Typography variant='h6' color='white'>
+              Already have an account?
+            </Typography>
+          </Grid>
+          <Grid item>
+            <TextField
+              id='si-username'
+              variant='standard'
+              placeholder='username'
+              InputProps={{
+                style: {
+                  color: 'white'
+                }
+              }}
+            ></TextField>
+          </Grid>
+          <Grid item>
+            <TextField
+              id='si-password'
+              variant='standard'
+              type='password'
+              placeholder='password'
+              InputProps={{
+                style: {
+                  color: 'white'
+                }
+              }}
+            ></TextField>
+          </Grid>
+          <Grid item align='center' mb={3}>
+            <Button variant='contained' color='primary'>
+              LOG IN
+            </Button>
+          </Grid>
+        </Grid>
+      </Paper>
+    </>
+  )
 }
 
 function SignUp () {
