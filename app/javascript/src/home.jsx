@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 import ReactDOM from 'react-dom'
+import { useNavigate } from 'react-dom'
 import axios from 'axios'
 import login_img from '../../assets/images/login.png'
 import {
@@ -14,58 +15,59 @@ import {
 } from '@mui/material'
 import TwitterIcon from '@mui/icons-material/Twitter'
 import $ from 'jquery'
+import { safeCredentials, handleErrors } from './utils/fetchHelper'
 
 import './home.scss'
 
-// axios.defaults.baseURL = 'http://0.0.0.0:3001/'
 axios.defaults.headers.common['X-CSRF-TOKEN'] = $(
   'meta[name="csrf-token"]'
 ).attr('content')
 
-function SignUp () {
-  const [email, setEmail] = useState('gustavorangel91@gmail.com')
-  const [username, setUsername] = useState('ggrangel')
-  const [password, setPassword] = useState('longpass123')
-
-  async function signUserUp () {
-    await axios
-      .post('api/users', {
+function signUserIn (username, password) {
+  fetch(
+    '/api/sessions',
+    safeCredentials({
+      method: 'POST',
+      body: JSON.stringify({
         user: {
-          email: email,
-          password: 'longpass123',
-          username: 'ggrangel'
+          username,
+          password
         }
       })
-      .then(
-        response => {
-          console.log(response)
-        },
-        error => {
-          console.log(error)
-        }
-      )
-  }
+    })
+  )
+    .then(handleErrors)
+    .then(res => {
+      console.log(res)
+    })
+}
 
-  // async function signUserUp () {
-  //   axios({
-  //     method: 'post',
-  //     url: '/api/users',
-  //     data: {
-  //       user: {
-  //         email: 'dfsasfds',
-  //         username: 'fdsafs',
-  //         password: 'fdasfdjaklafdsjfddfas'
-  //       }
-  //     }
-  //   }).then(
-  //     response => {
-  //       console.log(response)
-  //     },
-  //     error => {
-  //       console.log(error)
-  //     }
-  //   )
-  // }
+function SignUp () {
+  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
+  function signUserUp () {
+    fetch(
+      `/api/users`,
+      safeCredentials({
+        method: 'POST',
+        body: JSON.stringify({
+          user: {
+            email: email,
+            username: username,
+            password: password
+          }
+        })
+      })
+    )
+      .then(handleErrors)
+      .then(res => {
+        signUserIn(username, password)
+        let navigate = useNavigate()
+        navigate('/api/static_pages/feed')
+      })
+  }
 
   return (
     <Paper sx={{ width: '300px', backgroundColor: '#242626 ' }}>
@@ -127,143 +129,6 @@ function SignUp () {
               onChange={e => {
                 setPassword(e.target.value)
               }}
-              InputProps={{
-                style: {
-                  color: 'white'
-                }
-              }}
-            ></TextField>
-          </Grid>
-          <Grid item align='center' mb={3}>
-            <Button
-              variant='contained'
-              color='primary'
-              id='sign-up-btn'
-              onClick={signUserUp}
-            >
-              Sign up
-            </Button>
-          </Grid>
-        </Grid>
-      </FormControl>
-    </Paper>
-  )
-}
-
-function SignIn () {
-  return (
-    <>
-      <Paper sx={{ width: '300px', backgroundColor: '#242626 ' }}>
-        <Grid
-          container
-          flexDirection='column'
-          rowSpacing={2}
-          alignContent='center'
-        >
-          <Grid item>
-            <Typography variant='h6' color='white'>
-              Already have an account?
-            </Typography>
-          </Grid>
-          <Grid item>
-            <TextField
-              id='si-username'
-              variant='standard'
-              placeholder='username'
-              InputProps={{
-                style: {
-                  color: 'white'
-                }
-              }}
-            ></TextField>
-          </Grid>
-          <Grid item>
-            <TextField
-              id='si-password'
-              variant='standard'
-              type='password'
-              placeholder='password'
-              InputProps={{
-                style: {
-                  color: 'white'
-                }
-              }}
-            ></TextField>
-          </Grid>
-          <Grid item align='center' mb={3}>
-            <Button variant='contained' color='primary'>
-              LOG IN
-            </Button>
-          </Grid>
-        </Grid>
-      </Paper>
-    </>
-  )
-}
-
-function SignUp () {
-  const [email, setEmail] = useState()
-  const [username, setUsername] = useState()
-  const [password, setPassword] = useState()
-
-  async function signUserUp () {
-    await axios.post('/api/users', {
-      user: {
-        email: email,
-        username: username,
-        password: password
-      }
-    })
-  }
-
-  return (
-    <Paper sx={{ width: '300px', backgroundColor: '#242626 ' }}>
-      <FormControl>
-        <Grid
-          container
-          flexDirection='column'
-          rowSpacing={2}
-          alignContent='center'
-        >
-          <Grid item>
-            <Typography variant='h6' color='white'>
-              Create your account
-            </Typography>
-          </Grid>
-          <Grid item>
-            <TextField
-              id='su-email'
-              variant='standard'
-              placeholder='email'
-              value={email}
-              required={true}
-              InputProps={{
-                style: {
-                  color: 'white'
-                }
-              }}
-            ></TextField>
-          </Grid>
-          <Grid item>
-            <TextField
-              id='su-username'
-              variant='standard'
-              placeholder='username'
-              value={username}
-              InputProps={{
-                style: {
-                  color: 'white'
-                }
-              }}
-            ></TextField>
-          </Grid>
-          <Grid item>
-            <TextField
-              id='su-password'
-              type='password'
-              variant='standard'
-              placeholder='password'
-              value={password}
               InputProps={{
                 style: {
                   color: 'white'
