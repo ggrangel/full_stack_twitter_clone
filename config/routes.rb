@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     get  '/tweets/search/:keyword' => 'tweets#search'
   end
 
+  get '/feed' => 'static_pages#feed'
   get '*path' => 'static_pages#home'
   # if you are using active storage to upload and store images, comment the above line
 end

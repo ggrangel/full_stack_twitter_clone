@@ -17,11 +17,41 @@ import $ from 'jquery'
 import { safeCredentials, handleErrors } from './utils/fetchHelper'
 
 function Feed () {
+  const [username, setUsername] = useState(getUsername())
+
+  function getUsername () {
+    const res = fetch(
+      'api/authenticated',
+      safeCredentials({
+        method: 'GET'
+      })
+    )
+      .then(handleErrors)
+      .then(res => {
+        setUsername(res.username)
+      })
+    // return res.user
+  }
+
+  function logout () {
+    fetch(
+      'api/sessions',
+      safeCredentials({
+        method: 'delete'
+      })
+    )
+      .then(handleErrors)
+      .then(res => {
+        window.open('/')
+      })
+  }
+
   return (
     <>
       <Typography variant='h4' color='white' fontWeight={600}>
-        Join Twitter today.
+        Welcome, {username}
       </Typography>
+      <Button onClick={logout}>Logout </Button>
     </>
   )
 }

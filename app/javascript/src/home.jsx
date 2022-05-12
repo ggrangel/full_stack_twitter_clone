@@ -39,6 +39,11 @@ function signUserIn (username, password) {
     .then(handleErrors)
     .then(res => {
       console.log(res)
+      if (res.success) {
+        window.open('/feed')
+      } else {
+        console.log('wrong credentials')
+      }
     })
 }
 
@@ -64,8 +69,6 @@ function SignUp () {
       .then(handleErrors)
       .then(res => {
         signUserIn(username, password)
-        let navigate = useNavigate()
-        navigate('/api/static_pages/feed')
       })
   }
 
@@ -93,7 +96,6 @@ function SignUp () {
                 setEmail(e.target.value)
               }}
               required={true}
-              defaultValue='gustavorangel91@gmail.com'
               InputProps={{
                 style: {
                   color: 'white'
@@ -107,7 +109,6 @@ function SignUp () {
               variant='standard'
               placeholder='username'
               value={username}
-              defaultValue='ggrangel'
               onChange={e => {
                 setUsername(e.target.value)
               }}
@@ -124,7 +125,6 @@ function SignUp () {
               type='password'
               variant='standard'
               placeholder='password'
-              defaultValue='Longpassword123'
               value={password}
               onChange={e => {
                 setPassword(e.target.value)
@@ -153,6 +153,9 @@ function SignUp () {
 }
 
 function SignIn () {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
   return (
     <>
       <Paper sx={{ width: '300px', backgroundColor: '#242626 ' }}>
@@ -172,6 +175,8 @@ function SignIn () {
               id='si-username'
               variant='standard'
               placeholder='username'
+              value={username}
+              onChange={e => setUsername(e.target.value)}
               InputProps={{
                 style: {
                   color: 'white'
@@ -185,6 +190,8 @@ function SignIn () {
               variant='standard'
               type='password'
               placeholder='password'
+              value={password}
+              onChange={e => setPassword(e.target.value)}
               InputProps={{
                 style: {
                   color: 'white'
@@ -193,7 +200,11 @@ function SignIn () {
             ></TextField>
           </Grid>
           <Grid item align='center' mb={3}>
-            <Button variant='contained' color='primary'>
+            <Button
+              variant='contained'
+              color='primary'
+              onClick={() => signUserIn(username, password)}
+            >
               LOG IN
             </Button>
           </Grid>
