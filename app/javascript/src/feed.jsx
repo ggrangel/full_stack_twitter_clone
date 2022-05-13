@@ -1,8 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
 import ReactDOM from 'react-dom'
-import axios from 'axios'
-import login_img from '../../assets/images/login.png'
 import {
   Grid,
   Box,
@@ -12,15 +10,56 @@ import {
   Button,
   FormControl
 } from '@mui/material'
-import TwitterIcon from '@mui/icons-material/Twitter'
-import $ from 'jquery'
 import { safeCredentials, handleErrors } from './utils/fetchHelper'
+import ResponsiveAppBar from './components/Navbar.jsx'
+
+function UserInfo ({ username }) {
+  return (
+    <>
+      <Paper sx={{ width: '300px', backgroundColor: '#242626 ' }}>
+        <Grid container rowSpacing={1} alignContent='left'>
+          <Grid item>
+            <Typography mx={2} mb={2}>
+              @{username}
+            </Typography>
+          </Grid>
+          <Grid container flexDirection='row' ml={1} columnSpacing={1}>
+            <Grid item container xs={4} flexDirection='column'>
+              <Grid item>
+                <Typography variant='body2'>Tweets</Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant='body2'>0</Typography>
+              </Grid>
+            </Grid>
+            <Grid item container xs={4} flexDirection='column'>
+              <Grid item>
+                <Typography variant='body2'>Following</Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant='body2'>0</Typography>
+              </Grid>
+            </Grid>
+            <Grid item container xs={4} flexDirection='column'>
+              <Grid item>
+                <Typography variant='body2'>Followers</Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant='body2'>0</Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Paper>
+    </>
+  )
+}
 
 function Feed () {
   const [username, setUsername] = useState(getUsername())
 
   function getUsername () {
-    const res = fetch(
+    fetch(
       'api/authenticated',
       safeCredentials({
         method: 'GET'
@@ -30,7 +69,6 @@ function Feed () {
       .then(res => {
         setUsername(res.username)
       })
-    // return res.user
   }
 
   function logout () {
@@ -48,9 +86,8 @@ function Feed () {
 
   return (
     <>
-      <Typography variant='h4' color='white' fontWeight={600}>
-        Welcome, {username}
-      </Typography>
+      <ResponsiveAppBar username={username} />
+      <UserInfo username={username} />
       <Button onClick={logout}>Logout </Button>
     </>
   )
