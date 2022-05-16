@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   end
 
   get '/feed' => 'static_pages#feed'
+  get '/:username' => 'static_pages#user'
   get '*path' => 'static_pages#home'
   # if you are using active storage to upload and store images, comment the above line
 end
