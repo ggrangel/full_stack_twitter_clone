@@ -27,6 +27,32 @@ function SignUp () {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
+  const navigate = useNavigate()
+
+  function signUserIn (username, password) {
+    fetch(
+      '/api/sessions',
+      safeCredentials({
+        method: 'POST',
+        body: JSON.stringify({
+          user: {
+            username,
+            password
+          }
+        })
+      })
+    )
+      .then(handleErrors)
+      .then(res => {
+        console.log(res)
+        if (res.success) {
+          console.log(res)
+        } else {
+          console.log('wrong credentials')
+        }
+      })
+  }
+
   function signUserUp () {
     fetch(
       `/api/users`,
@@ -43,7 +69,8 @@ function SignUp () {
     )
       .then(handleErrors)
       .then(res => {
-        // signUserIn(username, password)
+        signUserIn(username, password)
+        navigate('/feed')
       })
   }
 
