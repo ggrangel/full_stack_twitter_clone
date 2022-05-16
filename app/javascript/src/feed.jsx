@@ -8,6 +8,7 @@ import {
   Paper,
   TextField,
   Button,
+  Link,
   FormControl,
   InputBase,
   IconButton
@@ -30,17 +31,24 @@ const theme = createTheme({
   }
 })
 
-function UserInfo () {
+function UserInfo ({ fetchUserTweets }) {
   const username = React.useContext(UsernameContext)
 
   return (
     <>
       <Box sx={{ width: '300px', backgroundColor: '#242626 ' }}>
         <Grid container rowSpacing={1} alignContent='left'>
-          <Grid item>
-            <Typography mx={2} mb={2} style={{ fontWeight: 'bold' }}>
+          <Grid item mx={2} mb={2}>
+            <Link
+              component='button'
+              style={{ fontWeight: 'bold' }}
+              onClick={() => {
+                fetchUserTweets(username)
+              }}
+              underline='hover'
+            >
               @{username}
-            </Typography>
+            </Link>
           </Grid>
           <Grid container flexDirection='row' ml={1} columnSpacing={1}>
             <Grid item container xs={4} flexDirection='column'>
@@ -110,9 +118,7 @@ function Trends () {
   )
 }
 
-function TweetTextField () {
-  const username = React.useContext(UsernameContext)
-
+function TweetTextField ({ fetchTweets }) {
   const maxChars = 140
 
   const [message, setMessage] = useState('')
@@ -132,8 +138,11 @@ function TweetTextField () {
     )
       .then(handleErrors)
       .then(res => {
-        console.log(message)
+        // console.log(fetchTweets)
+        console.log(res)
+        fetchTweets()
       })
+    setMessage('')
   }
 
   return (
@@ -176,25 +185,8 @@ function TweetTextField () {
   )
 }
 
-function Tweet () {
-  const [tweets, setTweets] = useState()
-
-  function fetchTweets () {
-    fetch(
-      'api/tweets',
-      safeCredentials({
-        method: 'GET'
-      })
-    )
-      .then(handleErrors)
-      .then(res => {
-        setTweets(res.tweets)
-      })
-  }
-
-  useEffect(() => {
-    fetchTweets()
-  }, [])
+function Tweet ({ tweets, fetchTweets, fetchUserTweets }) {
+  // const username = React.useContext(UsernameContext)
 
   function deleteTweet (id) {
     fetch(
@@ -217,7 +209,15 @@ function Tweet () {
           <Paper key={i} sx={{ width: '500px', backgroundColor: '#222222' }}>
             <Grid my={1} container flexDirection='column' wrap='nowrap'>
               <Grid item>
-                <Typography>@{tweet.username}</Typography>
+                <Link
+                  onClick={() => {
+                    fetchUserTweets(tweet.username)
+                  }}
+                  underline='hover'
+                  component='button'
+                >
+                  @{tweet.username}
+                </Link>
               </Grid>
               <Grid item>
                 <Typography>{tweet.message}</Typography>
@@ -247,54 +247,80 @@ function SearchBar () {
 }
 
 export const UsernameContext = React.createContext()
+export const AllTweetsContext = React.createContext()
 
 function Feed () {
   const [username, setUsername] = useState()
 
-  useEffect(() => {
-    function getUsername () {
-      fetch(
-        'api/authenticated',
-        safeCredentials({
-          method: 'GET'
-        })
-      )
-        .then(handleErrors)
-        .then(res => {
-          setUsername(res.username)
-        })
-    }
-    getUsername()
-  }, [])
+  const [tweets, setTweets] = useState()
 
-  function logout () {
+  function fetchTweets () {
     fetch(
-      'api/sessions',
+      'api/tweets',
       safeCredentials({
-        method: 'delete'
+        method: 'GET'
       })
     )
       .then(handleErrors)
       .then(res => {
-        window.open('/')
+        setTweets(res.tweets)
       })
   }
+
+  function fetchUserTweets (username) {
+    fetch(
+      `api/users/${username}/tweets`,
+      safeCredentials({
+        method: 'GET'
+      })
+    )
+      .then(handleErrors)
+      .then(res => {
+        setTweets(res.tweets)
+      })
+  }
+
+  function getUsername () {
+    fetch(
+      'api/authenticated',
+      safeCredentials({
+        method: 'GET'
+      })
+    )
+      .then(handleErrors)
+      .then(res => {
+        setUsername(res.username)
+      })
+  }
+
+  useEffect(() => {
+    getUsername()
+    fetchTweets()
+  }, [])
 
   return (
     <>
       <UsernameContext.Provider value={username}>
-        <ResponsiveAppBar mb={2} />
+        <ResponsiveAppBar
+          mb={2}
+          fetchUserTweets={fetchUserTweets}
+          fetchTweets={fetchTweets}
+        />
         <ThemeProvider theme={theme}>
           <Grid container mt={2} columnSpacing={5} justifyContent='center'>
             <Grid item>
-              <UserInfo />
+              <UserInfo fetchUserTweets={fetchUserTweets} />
               <Grid item>
                 <Trends />
               </Grid>
             </Grid>
             <Grid item>
-              <TweetTextField />
-              <Tweet />
+              <TweetTextField fetchTweets={fetchTweets} />
+              <Tweet
+                tweets={tweets}
+                fetchTweets={fetchTweets}
+                fetchUserTweets={fetchUserTweets}
+              />
             </Grid>
             <Grid item>
               <SearchBar />

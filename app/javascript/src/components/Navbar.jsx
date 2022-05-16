@@ -14,13 +14,39 @@ import Button from '@mui/material/Button'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
 import TwitterIcon from '@mui/icons-material/Twitter'
 import { UsernameContext } from '../feed'
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 
-const ResponsiveAppBar = () => {
+import { safeCredentials, handleErrors } from '../utils/fetchHelper'
+
+const ResponsiveAppBar = ({ fetchUserTweets, fetchTweets }) => {
   const username = React.useContext(UsernameContext)
 
   const [anchorElNav, setAnchorElNav] = React.useState(null)
   const [anchorElUser, setAnchorElUser] = React.useState(null)
+
+  function logout () {
+    fetch(
+      'api/sessions',
+      safeCredentials({
+        method: 'delete'
+      })
+    )
+      .then(handleErrors)
+      .then(res => {
+        window.open('/', '_self')
+      })
+  }
+
+  const settings = {
+    'My Feed': () => {
+      fetchUserTweets(username)
+    },
+    'General Feed': () => {
+      fetchTweets()
+    },
+    Logout: () => {
+      logout()
+    }
+  }
 
   const handleOpenNavMenu = event => {
     setAnchorElNav(event.currentTarget)
@@ -71,9 +97,14 @@ const ResponsiveAppBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map(setting => (
+              {Object.keys(settings).map((setting, _) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign='center'>{setting}</Typography>
+                  <Typography
+                    textAlign='center'
+                    onClick={() => settings[setting]()}
+                  >
+                    {setting}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>

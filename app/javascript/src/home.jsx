@@ -40,7 +40,7 @@ function signUserIn (username, password) {
     .then(res => {
       console.log(res)
       if (res.success) {
-        window.open('/feed')
+        window.open('/feed', '_self')
       } else {
         console.log('wrong credentials')
       }
