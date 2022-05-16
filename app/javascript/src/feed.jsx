@@ -10,7 +10,6 @@ import TweetTextField from './components/TweetTextField.jsx'
 import SearchBar from './components/SearchBar.jsx'
 import Tweet from './components/Tweet.jsx'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
-import { Link } from 'react-router-dom'
 
 import './feed.scss'
 
@@ -27,7 +26,7 @@ const theme = createTheme({
 
 export const UsernameContext = React.createContext()
 
-function Feed () {
+export default function Feed () {
   const [username, setUsername] = useState()
 
   const [tweets, setTweets] = useState()
@@ -38,10 +37,11 @@ function Feed () {
       safeCredentials({
         method: 'GET'
       })
-    ).then(res => {
-      console.log(res)
-      setTweets(res.tweets)
-    })
+    )
+      .then(handleErrors)
+      .then(res => {
+        setTweets(res.tweets)
+      })
   }
 
   function fetchUserTweets (username) {
@@ -54,7 +54,6 @@ function Feed () {
       .then(handleErrors)
       .then(res => {
         setTweets(res.tweets)
-        // window.open(`/${username}`)
       })
   }
 
@@ -68,25 +67,23 @@ function Feed () {
       .then(handleErrors)
       .then(res => {
         setUsername(res.username)
-        console.log(res)
       })
   }
 
   useEffect(() => {
     getUsername()
     fetchTweets()
-    console.log(tweets)
   }, [])
 
   return (
     <>
       <UsernameContext.Provider value={username}>
+        <ResponsiveAppBar
+          mb={2}
+          fetchUserTweets={fetchUserTweets}
+          fetchTweets={fetchTweets}
+        />
         <ThemeProvider theme={theme}>
-          <ResponsiveAppBar
-            mb={2}
-            fetchUserTweets={fetchUserTweets}
-            fetchTweets={fetchTweets}
-          />
           <Grid container mt={2} columnSpacing={5} justifyContent='center'>
             <Grid item>
               <UserInfo fetchUserTweets={fetchUserTweets} />
@@ -112,9 +109,9 @@ function Feed () {
   )
 }
 
-ReactDOM.render(
-  <React.StrictMode>
-    <Feed />
-  </React.StrictMode>,
-  document.getElementById('root')
-)
+// ReactDOM.render(
+//   <React.StrictMode>
+//     <Feed />
+//   </React.StrictMode>,
+//   document.getElementById('root')
+// )

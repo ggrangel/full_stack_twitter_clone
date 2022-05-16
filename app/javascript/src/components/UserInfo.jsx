@@ -1,8 +1,10 @@
 import React from 'react'
 import { Grid, Box, Typography, Link } from '@mui/material'
 import { UsernameContext } from '../feed.jsx'
+import { useNavigate } from 'react-router-dom'
 
 export default function UserInfo ({ fetchUserTweets }) {
+  const navigate = useNavigate()
   const username = React.useContext(UsernameContext)
 
   return (
@@ -13,10 +15,10 @@ export default function UserInfo ({ fetchUserTweets }) {
             <Link
               component='button'
               style={{ fontWeight: 'bold' }}
-              onClick={() => {
-                fetchUserTweets(username)
-              }}
               underline='hover'
+              rel='noopener noreferrer'
+              target='_blank'
+              onClick={() => navigate(`/${username}`)}
             >
               @{username}
             </Link>

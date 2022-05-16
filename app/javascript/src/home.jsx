@@ -14,36 +14,13 @@ import {
 import TwitterIcon from '@mui/icons-material/Twitter'
 import $ from 'jquery'
 import { safeCredentials, handleErrors } from './utils/fetchHelper'
+import { useNavigate } from 'react-router-dom'
 
 import './home.scss'
 
 axios.defaults.headers.common['X-CSRF-TOKEN'] = $(
   'meta[name="csrf-token"]'
 ).attr('content')
-
-function signUserIn (username, password) {
-  fetch(
-    '/api/sessions',
-    safeCredentials({
-      method: 'POST',
-      body: JSON.stringify({
-        user: {
-          username,
-          password
-        }
-      })
-    })
-  )
-    .then(handleErrors)
-    .then(res => {
-      console.log(res)
-      if (res.success) {
-        window.open('/feed', '_self')
-      } else {
-        console.log('wrong credentials')
-      }
-    })
-}
 
 function SignUp () {
   const [email, setEmail] = useState('')
@@ -66,7 +43,7 @@ function SignUp () {
     )
       .then(handleErrors)
       .then(res => {
-        signUserIn(username, password)
+        // signUserIn(username, password)
       })
   }
 
@@ -154,6 +131,32 @@ function SignIn () {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
+  const navigate = useNavigate()
+
+  function signUserIn (username, password) {
+    fetch(
+      '/api/sessions',
+      safeCredentials({
+        method: 'POST',
+        body: JSON.stringify({
+          user: {
+            username,
+            password
+          }
+        })
+      })
+    )
+      .then(handleErrors)
+      .then(res => {
+        console.log(res)
+        if (res.success) {
+          console.log(res)
+        } else {
+          console.log('wrong credentials')
+        }
+      })
+  }
+
   return (
     <>
       <Paper sx={{ width: '300px', backgroundColor: '#242626 ' }}>
@@ -201,7 +204,10 @@ function SignIn () {
             <Button
               variant='contained'
               color='primary'
-              onClick={() => signUserIn(username, password)}
+              onClick={() => {
+                signUserIn(username, password)
+                navigate('/feed')
+              }}
             >
               LOG IN
             </Button>
@@ -212,7 +218,7 @@ function SignIn () {
   )
 }
 
-function App () {
+function Home () {
   return (
     <>
       <Grid container columnSpacing={5}>
@@ -249,10 +255,10 @@ function App () {
   )
 }
 
-export default App
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-)
+export default Home
+// ReactDOM.render(
+//   <React.StrictMode>
+//     <Home />
+//   </React.StrictMode>,
+//   document.getElementById('root')
+// )
