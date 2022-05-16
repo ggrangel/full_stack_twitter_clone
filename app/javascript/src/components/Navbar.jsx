@@ -12,10 +12,13 @@ import MenuItem from '@mui/material/MenuItem'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import Button from '@mui/material/Button'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
-
+import TwitterIcon from '@mui/icons-material/Twitter'
+import { UsernameContext } from '../feed'
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 
-const ResponsiveAppBar = ({ username }) => {
+const ResponsiveAppBar = () => {
+  const username = React.useContext(UsernameContext)
+
   const [anchorElNav, setAnchorElNav] = React.useState(null)
   const [anchorElUser, setAnchorElUser] = React.useState(null)
 
@@ -38,11 +41,13 @@ const ResponsiveAppBar = ({ username }) => {
     <AppBar position='static'>
       <Container maxWidth='xl'>
         <Toolbar disableGutters>
+          <TwitterIcon />
           <Box sx={{ flexGrow: 1, display: { xs: 'flex' } }} />
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title='Open settings'>
               <Button
                 onClick={handleOpenUserMenu}
+                style={{ color: 'white' }}
                 sx={{ p: 0 }}
                 startIcon={<AccountCircleIcon />}
                 endIcon={<ArrowDropDownIcon />}
